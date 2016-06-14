@@ -1,0 +1,47 @@
+
+.nav-wrapper .brand-logo img {
+    display: block !important;
+    margin: 0 auto;
+}
+
+.button-collapse {
+    display: none !important;
+}
+
+.hide-on-med-and-down {
+    display: none !important;
+}
+
+a.btn-large {
+    display: none !important;
+}
+
+#works  {
+    display: none !important;
+}
+
+#services  {
+    display: none !important;
+}
+
+#why  {
+    display: none !important;
+}
+
+.why  {
+    display: none !important;
+    /*margin-top: 1000px !important;*/
+}
+
+
+#about img {
+    display: none !important;
+}
+
+#about {
+    margin-top: -200px;
+}
+
+footer {
+    display: none !important;
+}
