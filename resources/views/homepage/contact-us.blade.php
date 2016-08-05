@@ -1,8 +1,13 @@
-@extends('layouts.master')
+@extends('theme')
 
-@section('page_title', 'Contact Us')
+@section('title_tag')
+    <title>Contact Us</title>
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Contact Teachat for inquiries and other matters with regards to the site."/>
+@stop
 
 @section('body_content')
+    @include('includes.nav-index')
     <section class="contact">
         <div class="container">
             <div class="row">
@@ -18,9 +23,7 @@
                                 </button>
                                 <strong id="log_type"></strong> <span id="message_log"></span>
                             </div>
-
-                            {!! Form::open(array('url' => '#', 'class' => 'col s12', 'id' => 'form_contact_us')) !!}
-
+                            {!! Form::open(array('class' => 'col s12', 'id' => 'form_contact_us')) !!}
                                 <div class="div_notif"></div>
                                 <div class="row">
                                     <div class="input-field col s12">
@@ -85,9 +88,9 @@
             </div>
         </div>
     </section>
-@stop
-@section('custom-scripts')
 
+    <script type="text/javascript" src="{{asset('teachatv3/teachatv3.js')}}"></script>
     <script type="text/javascript" src="{{asset('teachatv3/contact-us/contact-us.js')}}"></script>
-
 @stop
+
+

@@ -10,10 +10,12 @@ use Teachat\Repositories\Eloquent\CurriculumEloquent;
 use Teachat\Repositories\Eloquent\GradesEloquent;
 use Teachat\Repositories\Eloquent\SchoolEloquent;
 use Teachat\Repositories\Eloquent\StateUsEloquent;
+use Teachat\Repositories\Eloquent\StudentsEloquent;
 use Teachat\Repositories\Eloquent\SubjectCategoryEloquent;
 use Teachat\Repositories\Eloquent\TeacherProfileEloquent;
 use Teachat\Repositories\Eloquent\TeacherSubjectsEloquent;
 use Teachat\Repositories\Eloquent\UserEloquent;
+use Teachat\Repositories\Eloquent\CountryEloquent;
 use Teachat\Repositories\Interfaces\AnnouncementsInterface;
 use Teachat\Repositories\Interfaces\AppointmentsInterface;
 use Teachat\Repositories\Interfaces\ChildrenInterface;
@@ -21,10 +23,12 @@ use Teachat\Repositories\Interfaces\CurriculumInterface;
 use Teachat\Repositories\Interfaces\GradesInterface;
 use Teachat\Repositories\Interfaces\SchoolInterface;
 use Teachat\Repositories\Interfaces\StateUsInterface;
+use Teachat\Repositories\Interfaces\StudentsInterface;
 use Teachat\Repositories\Interfaces\SubjectCategoryInterface;
 use Teachat\Repositories\Interfaces\TeacherProfileInterface;
 use Teachat\Repositories\Interfaces\TeacherSubjectsInterface;
 use Teachat\Repositories\Interfaces\UserInterface;
+use Teachat\Repositories\Interfaces\CountryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -56,5 +60,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ChildrenInterface::class, ChildrenEloquent::class);
         $this->app->bind(TeacherSubjectsInterface::class, TeacherSubjectsEloquent::class);
         $this->app->bind(AppointmentsInterface::class, AppointmentsEloquent::class);
+        $this->app->bind(StudentsInterface::class, StudentsEloquent::class);
+        $this->app->bind(CountryInterface::class, CountryEloquent::class);
     }
 }

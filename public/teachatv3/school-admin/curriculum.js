@@ -15,6 +15,8 @@ var curriculum = $('#curriculum').DataTable({
 $('#form_add_curriculum').on('submit',function(e){
     e.preventDefault();
     ajaxCall('POST', 'curriculum', getFormInputs(this.id), false, 'card', 'form_add_curriculum', curriculum);
+    $('#form_add_curriculum')[0].reset();
+    setTimeout(function(){$('.notif').html(''); }, 3000);
 });
 
 $('.form_edit_curriculum').on('submit',function(e){

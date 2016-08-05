@@ -24,6 +24,14 @@
                             <textarea id="announcement" name="announcement" class="validate materialize-textarea" required="" aria-required="true"></textarea>
                             <label for="announcement">Announcment</label>
                         </div>
+                        <div class="input-field col s12 m6">
+                            <input id="publish_on" type="date" required="" name="publish_on" class="datepicker">
+                            <label for="publish_on">Publish on</label>
+                        </div>
+                        <div class="input-field col s12 m6">
+                            <input id="expiration_date" type="date" required="" name="expiration_date" class="datepicker">
+                            <label for="expiration_date">Expiration Date</label>
+                        </div>
                         <div class="input-field col s12 m3">
                             <button id="btn-add-announcements" class="btn waves-effect btn-large btn-block waves-light">Add <i class="material-icons right">add</i></button>
                         </div>
@@ -47,7 +55,10 @@
             <h5>Announcement to <span id="view_announce_to"></span></h5>
 
             <div>Title: <span id="view_title"></span></div><br />
-            <div>Date: <span id="view_created_at"></span></div><br />
+            <div>Date Created: <span id="view_created_at"></span></div><br />
+            <div>Date of Publishing: <span id="view_publish"></span></div><br />
+            <div>Date of Expiry: <span id="view_exp"></span></div><br />
+            <div>From: <span id="view_from"></span> & <span id="view_school"></span></div><br />
 
             Announcement: <div id="view_announcement"></div>
 
@@ -109,5 +120,13 @@
 <script src="{{ asset('dataTable/jquery.dataTables_.min.js')}}"></script>
 <script src="{{ asset('teachatv3/teachers/announcements.js')}}"></script>
 <script src="{{ asset('teachatv3/teachatv3.js')}}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('select').material_select();
+        $("select[required]").css({display: "inline", height: 0, padding: 0, width: 0});
+    });
+</script>
+
+@include('teacher.floox-script')
 
 @stop

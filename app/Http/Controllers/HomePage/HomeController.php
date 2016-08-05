@@ -35,4 +35,9 @@ class HomeController extends Controller
     {
         return view('homepage.privacy-policy');
     }
+
+    public function addSchool()
+    {
+        return view('homepage.add-school');
+    }
 }

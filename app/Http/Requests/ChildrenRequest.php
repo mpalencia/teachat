@@ -25,13 +25,13 @@ class ChildrenRequest extends Request
     {
         return [
             'first_name' => 'required|max:50',
-            'middle_name' => 'required|max:50',
+            // 'middle_name' => 'required|max:50',
             'last_name' => 'required|max:50',
             'birthdate' => 'required',
             'grade_id' => 'required',
-            'state_id' => 'required',
+            // 'state_id' => 'required',
             'gender' => 'required',
-            'city' => 'required',
+            // 'city' => 'required',
             'section' => 'required',
         ];
     }
@@ -45,7 +45,7 @@ class ChildrenRequest extends Request
     {
         return [
             'grade_id.required' => 'The grade field is required.',
-            'state_id.required' => 'The state field is required.',
+            // 'state_id.required' => 'The state field is required.',
         ];
     }
 }

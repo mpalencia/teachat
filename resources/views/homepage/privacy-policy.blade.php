@@ -1,8 +1,12 @@
-@extends('layouts.master')
+@extends('theme')
 
-@section('page_title', 'Privacy Policy')
+@section('title_tag')
+    <title>Privacy Policy</title>
+    <meta name="robots" content="noindex, nofollow">
+@stop
 
 @section('body_content')
+    @include('includes.nav-index')
 
     <div class="container policy">
         <h4>Privacy Policy</h4>
@@ -11,10 +15,12 @@
         <p>
             This privacy policy has been compiled to better serve those who are concerned with how their 'Personally identifiable information' (PII) is being used online. PII, as used in US privacy law and information security, is information that can be used on its own or with other information to identify, contact, or locate a single person, or to identify an individual in context. Please read our privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable Information in accordance with our website.
         </p>
+        <p>Please note that you are responsible for any content created and provided in relation to TeaChat. We cannot control to whom you choose to share information with and what you share. </p>
         <p>
             <strong>What personal information do we collect from the people that visit our blog, website or app?</strong><br/>
             When ordering or registering on our site, as appropriate, you may be asked to enter your name, email address, mailing address, phone number or other details to help you with your experience.
         </p>
+        <p>We will not display your personal contact information to any users. The information we collect allows us to set up a unique user account and personalise your experience. You can, at anytime, login to update and change the information provided. With your consent, uploading of documents and files can be enabled as long it is according to the guidelines provided by the related educational institution. </p>
         <p>
             <strong>When do we collect information?</strong><br/>
             We collect information from you when you register on our site Create an appointment or enter information on our site.
@@ -114,7 +120,7 @@
             <p>
                 <strong>COPPA (Children Online Privacy Protection Act)</strong><br/>
                 When it comes to the collection of personal information from children under 13, the Children's Online Privacy Protection Act (COPPA) puts parents in control. The Federal Trade Commission, the nation's consumer protection agency, enforces the COPPA Rule, which spells out what operators of websites and online services must do to protect children's privacy and safety online.<br/><br/>
-                We do not specifically market to children under 13.
+                We do not specifically market to children under 13, but may collect name, date of birth and other identifiers in order to create a unique profile which enables us to match teachers with the right student profiles. If you believe that an underage user may have provided us Personal Information in violation of this paragraph, please contact us at <a href="mailto:info@teachat.co">info@teachat.co</a>. 
             </p>
             <p>
                 <strong>Fair Information Practices</strong><br/>

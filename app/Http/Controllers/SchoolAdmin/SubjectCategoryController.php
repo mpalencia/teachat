@@ -5,6 +5,7 @@ namespace Teachat\Http\Controllers\SchoolAdmin;
 use Auth;
 use Teachat\Http\Controllers\Controller;
 use Teachat\Http\Requests\SubjectCategoryRequest;
+use Teachat\Models\SubjectCategory;
 use Teachat\Repositories\Interfaces\SubjectCategoryInterface;
 
 class SubjectCategoryController extends Controller
@@ -46,13 +47,13 @@ class SubjectCategoryController extends Controller
 
         $sc = array_map(function ($structure) use ($subject_category) {
 
-            $action = '<button id="btn-edit-subject-category" type="button" class="btn btn-primary btn-circle btn-edit-subject-category" title="Edit"
+            $action = '<button id="btn-edit-subject-category" type="button" class="btn teal btn-primary btn-flat btn-circle btn-edit-subject-category" title="Edit"
                         onclick="editSubjectCategory(this)"
                         data-subject-category-id="' . $structure['id'] . '"
                         data-description="' . $structure['description'] . '">
                         <i class="material-icons">edit</i>
                     </button> ';
-            $action .= '<button id="btn-delete-subject-category" type="button" class="btn btn-primary red btn-circle btn-delete-subject-category" title="Delete"
+            $action .= '<button id="btn-delete-subject-category" type="button" class="btn btn-primary btn-flat red btn-circle btn-delete-subject-category" title="Delete"
                         onclick="deleteSubjectCategory(this)"
                         data-subject-category-id="' . $structure['id'] . '"
                         data-description="' . $structure['description'] . '">
@@ -74,7 +75,13 @@ class SubjectCategoryController extends Controller
      * @return Response
      */
     public function store(SubjectCategoryRequest $request)
-    {
+    {   
+        $counter = SubjectCategory::where('user_id', '=', Auth::user()->id)->where('school_id', '=', Auth::user()->school_id)->where('description', '=', $request->description)->count();
+
+        if($counter > 0){
+            return response()->json(['result' => false, 'message' => 'Subject is aleady in the list.']);
+        }
+
         $request->merge(array('user_id' => Auth::user()->id, 'school_id' => Auth::user()->school_id));
 
         if ($this->subjectCategory->create($request->all())) {
@@ -91,7 +98,13 @@ class SubjectCategoryController extends Controller
      * @return Response
      */
     public function edit($id, SubjectCategoryRequest $request)
-    {
+    {   
+        $counter = SubjectCategory::where('description', '=', $request->description)->count();
+
+        if($counter > 0){
+            return response()->json(['result' => false, 'message' => 'Subject is aleady in the list.']);
+        }
+
         if ($this->subjectCategory->update($id, $request->all())) {
             return response()->json(['success' => true, 'message' => 'Successfully updated.']);
         }

@@ -42,7 +42,10 @@
                                 <div class="input-field col s12 m12 l12">
                                     <button class="btn waves-effect btn-large btn-block waves-light" id="btn-login-submit">Login</button>
                                 </div>
-                                <div class="input-field col s12 m12">
+                                <div class="input-field col s6 m6">
+                                    <p>No account? <a href="/registration">REGISTER</a> here.</p>
+                                </div>
+                                <div class="input-field col s6 m6">
                                     <a href="#forgot_password_modal" class="waves-effect waves-white btn-flat right modal-trigger">Forgot Password</a>
                                 </div>
                             </div>
@@ -82,6 +85,34 @@
         {!! Form::close() !!}
 
     </div>
+
+    <!-- Forced Change Password Modal -->
+<div id="new_pass_modal" class="modal new_pass_modal">
+    <div class="modal-content">
+        <!-- <form id="forgot_password_form" class="col s12"> -->
+        {!! Form::open(array('url' => '#', 'class' => 'col s12', 'id' => 'new_pass_modal')) !!}
+
+            <div class="div_notif"></div>
+            <div class="row">
+                <h4>Forgot Password?</h4>
+                <div class="input-field col s12 m12">
+                  <input id="email" type="email" class="validate" required="required" name="email" aria-required="true">
+                  <label for="email" data-error="Invalid">Enter Email</label>
+                </div>
+            </div>
+
+                <div class="input-field col s12 m6 offset-m3">
+                    <button class="waves-effect waves-light btn btn-large btn-block deep-orange accent-3" id="btn-reset-password">Reset</button>
+                </div>
+                <div class="input-field col s12 m12">
+                    <a href="#" class="waves-effect waves-white btn-flat modal-action modal-close right freakin-modal">Close</a>
+                </div>
+            </div>
+
+        {!! Form::close() !!}
+
+    </div>
+
 </div>
 @stop
 

@@ -52,6 +52,7 @@ class CurriculumRequest extends Request
             'subject_category_id.required' => 'The subject category field is required.',
             'subject_category_id.unique' => 'The subject category has been already taken.',
             'subject.required' => 'The subject field is required.',
+            'subject.unique' => 'Subject is aleady in the list.',
         ];
     }
 }

@@ -48,6 +48,21 @@ class CurriculumEloquent implements CurriculumInterface
     }
 
     /**
+     * Get Curriculum by attributes
+     *
+     * @param array $attributes
+     * @return Curriculum
+     */
+    public function getByIdAndAttributes(array $attributes)
+    {
+        if ($curriculum = $this->curriculum->where($attributes)->first()) {
+            return $curriculum;
+        }
+
+        return false;
+    }
+
+    /**
      * Get all Curriculum by attributes
      *
      * @param array $attributes
@@ -74,6 +89,19 @@ class CurriculumEloquent implements CurriculumInterface
         return $this->curriculum->with($relations)->where($attributes)->orderBy($orderBy, $sort)->get()->toArray();
     }
 
+    /**
+     * Get all Curriculum by attributes with relationships customize
+     *
+     * @param array $attributes
+     * @param array $relations
+     * @param string $orderBy
+     * @param string $sort
+     * @return Curriculum
+     */
+    public function getAllByAttributesWithRelationsCustom(array $attributes, array $relations, $orderBy = '', $sort = 'ASC')
+    {
+        return $this->curriculum->with($relations)->where($attributes)->orderBy($orderBy, $sort);
+    }
     /**
      * Create a new curriculum.
      *

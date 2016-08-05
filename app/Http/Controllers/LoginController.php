@@ -4,6 +4,8 @@ namespace Teachat\Http\Controllers;
 
 use Auth;
 use Teachat\Http\Requests\LoginRequest;
+use Teachat\Models\User;
+
 
 class LoginController extends Controller
 {
@@ -42,6 +44,16 @@ class LoginController extends Controller
     public function authenticate(LoginRequest $login_request)
     {
         if (!Auth::attempt(['email' => $login_request->email, 'password' => $login_request->password, 'active' => 1, 'suspend' => 0])) {
+            $user = User::where('email', '=', $login_request->email)->first();
+            if($user){
+                if($user->active == 0){
+                    return response()->json(['success' => false, 'message' => 'Your account is not activated yet! Please check your inbox for the activation email.']);
+                }
+
+                if($user->suspend == 1){
+                    return response()->json(['success' => false, 'message' => 'Your account is currently unavailable. Please contact school admin.']);
+                }
+            }
             return response()->json(['success' => false, 'message' => 'Invalid email or password.']);
         }
 

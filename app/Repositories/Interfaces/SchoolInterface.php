@@ -14,6 +14,28 @@ interface SchoolInterface
     public function getAll();
 
     /**
+     * Get all schools and their status
+     *
+     * @return School
+     */
+    public function getAllSchool();
+
+    /**
+     * Get all schools with limit
+     *
+     * @return School
+     */
+    public function getAllWithLimit();
+
+    /**
+     * Get all Announcements by attributes
+     *
+     * @param array $attributes
+     * @return Announcements
+     */
+    public function getAllByAttributes(array $attributes);
+
+    /**
      * Get schools by id
      *
      * @param int $id

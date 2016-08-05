@@ -1,0 +1,4 @@
+<?php
+ /**
+ *	Files Helper  
+ */

@@ -1,0 +1,4 @@
+<?php
+ /**
+ *	Quickblox Helper  
+ */

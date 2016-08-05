@@ -17,6 +17,7 @@ class RedirectIfParent
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        //dd('P'.Auth::guard($guard)->user()->role_id);
         if (Auth::guard($guard)->user()->role_id != 3) {
             return abort(401);
         }

@@ -52,5 +52,6 @@ class Kernel extends HttpKernel
         'school-admin' => \Teachat\Http\Middleware\RedirectIfSchoolAdmin::class,
         'teachers' => \Teachat\Http\Middleware\RedirectIfTeacher::class,
         'parents' => \Teachat\Http\Middleware\RedirectIfParent::class,
+        'admin' => \Teachat\Http\Middleware\RedirectIfAdmin::class,
     ];
 }

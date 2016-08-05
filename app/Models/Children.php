@@ -24,4 +24,9 @@ class Children extends Model
     {
         return $this->hasOne('Teachat\Models\Grades', 'id', 'grade_id');
     }
+
+    public function school()
+    {
+        return $this->hasOne('Teachat\Models\School', 'id', 'school_id');
+    }
 }

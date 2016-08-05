@@ -2,7 +2,7 @@
 	<div style='width:600px; margin: 0 auto; '>
 		<center>
 			<div style='padding: 1em 0; background: #D7E8D1;'>
-				<img alt='Teachat' src='http://dev3.teachat.co/assets/img/teachat2.png' style='margin-left: 1em; width: 150px;'/>
+				<img alt='Teachat' src='https://dev3.teachat.co/images/teachat-logo.png' style='margin-left: 1em; width: 150px;'/>
 			</div>
 		</center>
 		<h1 style='letter-spacing: 3px; color:#000 !important;'> Someone message us.</h1>
@@ -33,7 +33,7 @@
 			<br/><br/><br/>
 			<center>
 				<small>
-					Copyright &copy 2015 Teachat.co
+					Copyright &copy; 2015 Teachat.co
 				</small>
 			</center>
 		</div>

@@ -1,17 +1,17 @@
 @extends('layouts.master')
 
-@section('page_title', 'Curriculum')
+@section('page_title', 'Subjects')
 
 @section('body_content')
 <div class="row btn-thing">
-    <h4>School Curriculum</h4>
+    <h4>Subjects</h4>
     <span class="divider"></span>
     <div class="divider"></div><br/>
     <div class="row">
         <div id="admin" class="col s12">
             <div class="card material-table" >
                 <div class="table-header blue-grey lighten-5">
-                    Add Curriculum
+                    Add Subject
                 </div>
                 <div class="div_notif notif"></div>
                 <form id="form_add_curriculum" accept-charset="utf-8" class="row" style="padding: 10px">
@@ -33,7 +33,7 @@
                     </div>
                     <div class="input-field col s12 m12">
                         <input type="text" name="subject" id="subject" class="validate" required="" aria-required="true">
-                        <label for="subject">Subject</label>
+                        <label for="subject">Subject Name</label>
                     </div>
                     <div class="input-field col s12 m3">
                         <button id="btn-add-curriculum" class="btn waves-effect btn-large btn-block waves-light">Add <i class="material-icons right">add</i></button>
@@ -104,5 +104,10 @@
 <script src="{{ asset('dataTable/jquery.dataTables.min.js')}}"></script>
 <script src="{{ asset('dataTable/jquery.dataTables_.min.js')}}"></script>
 <script src="{{ asset('teachatv3/school-admin/curriculum.js')}}"></script>
-
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('select').material_select();
+        $("select[required]").css({display: "inline", height: 0, padding: 0, width: 0});
+    });
+</script>
 @stop

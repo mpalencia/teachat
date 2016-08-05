@@ -24,7 +24,27 @@ class AppointmentsRequest extends Request
     public function rules()
     {
         return [
-            //
+            //'parent_id' => 'required',
+            'appt_date' => 'required',
+            'appt_stime' => 'required',
+            'appt_etime' => 'required',
+            'title' => 'required',
+            'description' => 'required',
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            //'parent_id.required' => 'The parent field is required.',
+            'appt_date.required' => 'The appointment date field is required.',
+            'appt_stime.required' => 'The appointment start date field is required.',
+            'appt_etime.required' => 'The appointment end date field is required.',
         ];
     }
 }

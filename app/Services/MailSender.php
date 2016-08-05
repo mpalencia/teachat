@@ -12,7 +12,7 @@ use Mail;
 class MailSender
 {
     /**
-     * Send mail to guest for password reset
+     * Send e-mail.
      *
      * @param string $view
      * @param string $subject

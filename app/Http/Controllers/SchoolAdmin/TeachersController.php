@@ -39,17 +39,17 @@ class TeachersController extends Controller
 
             $teacher_name = '<a href="#" style="color:#3174c7" onclick="viewTeacher(' . $structure['id'] . ')">' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '</a>';
 
-            $action = '<button id="btn-edit-teachers" type="button" class="btn btn-primary btn-circle btn-edit-teachers" title="Approve" data-toggle="modal" data-target="#edit-teachers"
+            $action = '<button id="btn-edit-teachers" type="button" class="btn teal btn-primary btn-circle btn-flat btn-edit-teachers" title="Approve" data-toggle="modal" data-target="#edit-teachers"
                         onclick="approveTeacher(this)"
                         data-teachers-id="' . $structure['id'] . '"
                         data-teachers-name="' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '">
                         <i class="material-icons">check</i>
                     </button> ';
-            $action .= '<button id="btn-delete-teachers" type="button" class="btn btn-primary red btn-circle btn-delete-teachers" title="Denied" data-toggle="modal" data-target="#delete-teachers"
+            $action .= '<button id="btn-delete-teachers" type="button" class="btn btn-primary red btn-circle btn-flat btn-delete-teachers" title="Denied" data-toggle="modal" data-target="#delete-teachers"
                         onclick="denyTeacher(this)"
                         data-teachers-id="' . $structure['id'] . '"
                         data-teachers-name="' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '">
-                        <i class="material-icons">delete</i>
+                        <i class="material-icons">close</i>
                     </button>';
 
             return [

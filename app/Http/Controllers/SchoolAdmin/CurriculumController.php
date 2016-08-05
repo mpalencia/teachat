@@ -41,7 +41,7 @@ class CurriculumController extends Controller
      */
     public function index()
     {
-        $data['grades'] = $this->grades->getAllByAttributes(['user_id' => Auth::user()->id], 'description');
+        $data['grades'] = $this->grades->getAll();
         $data['subjectCategory'] = $this->subjectCategory->getAllByAttributes(['user_id' => Auth::user()->id], 'description');
 
         return view('school_admin.curriculum', $data);
@@ -58,7 +58,7 @@ class CurriculumController extends Controller
 
         $c = array_map(function ($structure) use ($curriculum) {
 
-            $action = '<button id="btn-edit-curriculum" type="button" class="btn btn-primary btn-circle btn-edit-curriculum" title="Edit" data-toggle="modal" data-target="#edit-curriculum"
+            $action = '<button id="btn-edit-curriculum" type="button" class="btn btn-primary teal btn-circle btn-flat btn-edit-curriculum" title="Edit" data-toggle="modal" data-target="#edit-curriculum"
                         onclick="editCurriculum(this)"
                         data-curriculum-id="' . $structure['id'] . '"
                         data-grade-id="' . $structure['grade_id'] . '"
@@ -66,7 +66,7 @@ class CurriculumController extends Controller
                         data-subject="' . $structure['subject'] . '">
                         <i class="material-icons">edit</i>
                     </button> ';
-            $action .= '<button id="btn-delete-curriculum" type="button" class="btn btn-danger btn-circle red btn-delete-curriculum" title="Delete" data-toggle="modal" data-target="#delete-curriculum"
+            $action .= '<button id="btn-delete-curriculum" type="button" class="btn btn-danger btn-circle btn-flat red btn-delete-curriculum" title="Delete" data-toggle="modal" data-target="#delete-curriculum"
                         onclick="deleteCurriculum(this)"
                         data-curriculum-id="' . $structure['id'] . '"
                         data-grade-id="' . $structure['grade_id'] . '"

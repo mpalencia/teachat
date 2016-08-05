@@ -6,6 +6,12 @@ use Teachat\Models\Children;
 
 interface ChildrenInterface
 {
+    /**
+     * Get children
+     *
+     * @return Children
+     */
+    public function get();
 
     /**
      * Get children by id
@@ -54,6 +60,17 @@ interface ChildrenInterface
     public function getAllByAttributes(array $attributes, $orderBy = '', $sort = 'ASC');
 
     /**
+     * Get all Curriculum by attributes with relationships
+     *
+     * @param array $attributes
+     * @param array $relations
+     * @param string $orderBy
+     * @param string $sort
+     * @return Curriculum
+     */
+    public function getAllByAttributesWithRelations(array $attributes, array $relations, $orderBy = '', $sort = 'ASC');
+
+    /**
      * Create a new child.
      *
      * @param array $payload
@@ -78,4 +95,12 @@ interface ChildrenInterface
      * @return boolean
      */
     public function updateByAttributes(array $attributes, array $update_fields);
+
+    /**
+     * Delete a certain child.
+     *
+     * @param int $id
+     * @return boolean
+     */
+    public function delete($id);
 }

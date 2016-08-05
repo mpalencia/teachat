@@ -7,6 +7,8 @@ use Teachat\Http\Controllers\Controller;
 use Teachat\Http\Requests\SubjectRequest;
 use Teachat\Models\TeacherSubjects;
 use Teachat\Repositories\Interfaces\CurriculumInterface;
+use Teachat\Repositories\Interfaces\GradesInterface;
+use Teachat\Repositories\Interfaces\SubjectCategoryInterface;
 use Teachat\Repositories\Interfaces\TeacherSubjectsInterface;
 
 class SubjectsController extends Controller
@@ -22,16 +24,25 @@ class SubjectsController extends Controller
     private $teacherSubjects;
 
     /**
+     * @var GradesInterface
+     */
+    private $grades;
+
+    private $subjectCategory;
+
+    /**
      * Curriculum controller instance.
      *
      * @param CurriculumInterface $subject
      * @param TeacherSubjectsInterface $teacherSubjects
      * @return void
      */
-    public function __construct(CurriculumInterface $subject, TeacherSubjectsInterface $teacherSubjects)
+    public function __construct(CurriculumInterface $subject, TeacherSubjectsInterface $teacherSubjects, GradesInterface $grades, SubjectCategoryInterface $subjectCategory)
     {
         $this->subject = $subject;
+        $this->subjectCategory = $subjectCategory;
         $this->teacherSubjects = $teacherSubjects;
+        $this->grades = $grades;
     }
 
     /**
@@ -41,7 +52,17 @@ class SubjectsController extends Controller
      */
     public function index()
     {
-        $data['subjects'] = $this->subject->getAllByAttributesWithRelations(['school_id' => Auth::user()->school_id], ['grades', 'subjectCategory'], 'subject');
+        $selected_subjects = TeacherSubjects::where(['user_id' => Auth::user()->id], ['school_id' => Auth::user()->school_id])
+            ->select('subject_id')
+            ->get()
+            ->toArray();
+
+        $sc = array_map(function ($structure) use ($selected_subjects) {
+            return $structure['subject_id'];
+
+        }, $selected_subjects);
+
+        $data['subjects'] = $this->subject->getAllByAttributesWithRelationsCustom(['school_id' => Auth::user()->school_id], ['grades', 'subjectCategory'], 'subject')->whereNotIn('id', $sc)->get()->toArray();
 
         return view('teacher.subject', $data);
     }
@@ -67,11 +88,17 @@ class SubjectsController extends Controller
             ->toArray();
 
         $sc = array_map(function ($structure) use ($subjects) {
-            $action = '<button id="btn-delete-subjects" type="button" class="btn btn-primary red btn-circle btn-delete-subjects" title="Delete"
+
+            $action = '<a href="/teacher/subjects/add-students/' . $structure['subject_id'] . '">
+                    <button type="button" class="btn btn-primary btn-flat blue btn-circle" title="Add Students">
+                        <i class="material-icons" style="color:#fff">person_add</i>
+                    </button></a> ';
+
+            $action .= '<button id="btn-delete-subjects" type="button" class="btn btn-primary red btn-circle btn-flat btn-delete-subjects" title="Delete"
                         onclick="deleteSubject(this)"
                         data-subjects-id="' . $structure['id'] . '"
                         data-subject-id="' . $structure['subject_id'] . '">
-                        <i class="material-icons">delete</i>
+                        <i class="material-icons" style="color:#fff">delete</i>
                     </button>';
 
             return [
@@ -105,6 +132,8 @@ class SubjectsController extends Controller
     /**
      * Edit a subject.
      *
+     * @param integer $id
+     * @param GradesRequest $request
      * @return Response
      */
     public function update($id, GradesRequest $request)
@@ -114,6 +143,25 @@ class SubjectsController extends Controller
         }
 
         return response()->json(['result' => false, 'message' => 'There is an error occured while updating. Please try again later.']);
+    }
+
+    /**
+     * Display adding students to a subject page.
+     *
+     * @param integer $id
+     * @return Response
+     */
+    public function addStudents($id)
+    {
+        $curriculum = $this->subject->getByIdAndAttributes(['subject_category_id' => $id, 'school_id' => Auth::user()->school_id]);
+        $grade = $this->grades->getByIdAndAttributes(['id' => $curriculum->grade_id]);
+
+        $data = array(
+            'curriculum' => $curriculum,
+            'grade' => $grade,
+        );
+
+        return view('teacher.add-students', $data);
     }
 
     /**

@@ -6,58 +6,107 @@ $(document).ready(function(){
   });
 });
 
-	function calendarClick(id){
-		var date = $("#" + id).data("date");
-		var hasEvent = $("#" + id).data("hasEvent");
-			//---show loading here----
-		    if(hasEvent == true){
+	function errorToast(message){
+      var error = '<ul class="input-field col s12 m12 red lighten-2 white-text ul_notif">'+
+                                       '<li>'+
+                                          ' <h6><i class="material-icons tiny">error_outline</i> error message</h6>'+
+                                      ' </li>'+
+                                '</ul>';
+    }
+
+    function calendarClick(id, teacher_id){
+      var date = $("#" + id).data("date");
+      var hasEvent = $("#" + id).data("hasEvent");
+        //---show loading here----
+        //if(hasEvent == true){
+      var selectedDate = new Date(date);
+      var currentDate = new Date();
+
+      selectedDate = selectedDate.getFullYear() + '-' + (selectedDate.getMonth() + 1) + '-' + selectedDate.getDate();
+      currentDate = currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getDate();
+      
+      if (selectedDate >= currentDate){
+          $('#appointmentDate').val(date).focus();
           $('#view_appointment .date_selected').html(dateTohuman(date));
-		    	$('#view_appointment').openModal();
-		      	getAppointmentBySelectedDate(date);
-		  	}else{
-		  		//---render no file here
-		  	}
-	}
+          $('#view_appointment').openModal();
+            getAppointmentBySelectedDate(date, teacher_id);
+      }
+      return true;
+    }
 
-	function getAppointmentBySelectedDate(data){
-		var param = {};
-		$('#view_appointment .appointment_list').html(' ');
-    	var url = '/appointment/v2/process/getAppointmentBySelectedDate/'+data;
-    	$.ajax({
-            type: "GET",
-            url: url,
-            processData:false,
-            contentType:false,
-            async: true,
-            cache:false,
-            data: param,
-            success: function (data) {
-            	var json = $.parseJSON(data);
-                var files = json.length;
+    function getAppointmentBySelectedDate(date, teacher_id){
+      var param = {};
+      $('#view_appointment .appointment_list').html(' ');
+        var url = '/parent/appointments/getTimeSchedule/'+date+'/'+teacher_id;
+        $.ajax({
+              type: "GET",
+              url: url,
+              processData:false,
+              contentType:false,
+              async: true,
+              cache:false,
+              data: param,
+              success: function (data) {
+                var json = $.parseJSON(data);
+                  var files = json.length;
 
-                for(i = 0; i < files; i++){
-                   UI_updater(json[i]);
-                }
-    			
-            }
-        });
-	}
+                    for(i = 0; i < files; i++){
+                       UI_updater_cparent(json[i]);
+                    }
+                    //timePicks(json.start, json.end);
+              }
+          });
+    }
+    /*function calendarClick(id){
+      var date = $("#" + id).data("date");
+      var hasEvent = $("#" + id).data("hasEvent");
+        //---show loading here----
+          if(hasEvent == true){
+            $('#view_appointment .date_selected').html(dateTohuman(date));
+            $('#view_appointment').openModal();
+              getAppointmentBySelectedDate(date);
+          }
+    }
+
+    function getAppointmentBySelectedDate(data){
+      var param = {};
+      $('#view_appointment .appointment_list').html(' ');
+        var url = '/parent/appointments/getAllBySelectedDate/'+data;
+        $.ajax({
+              type: "GET",
+              url: url,
+              processData:false,
+              contentType:false,
+              async: true,
+              cache:false,
+              data: param,
+              success: function (data) {
+                var json = $.parseJSON(data);
+                  var files = json.length;
+
+                    for(i = 0; i < files; i++){
+                       UI_updater(json[i]);
+                    }
+              }
+          });
+    }*/
 
 
-	function UI_updater(data){
-		var image;
-		if(data.profile_img === 'dp.png'){
-			image = '/images/profile/dp.png';
-		}else{
-			image = 'https://s3-ap-southeast-1.amazonaws.com/teachatco/images/'+data.profile_img;
-		}
-		var button;
+	function UI_updater_cteacher(data){
+    
+      var image;
+      if(data.profile_img === 'dp.png'){
+        image = '/images/profile/dp.png';
+      }else{
+        image = 'https://s3-ap-southeast-1.amazonaws.com/teachatco/images/'+data.profile_img;
+      }
+      var button;
     var res;
-		if(data.action !== null){
-			button = '<a class="waves-effect waves-light btn" onClick="functionViewDetail('+data.Appt_id+');" href="#appointment_details"><i class="material-icons">zoom_in</i></a>';
-		}else{
-			button = 'Waiting for confirmation <a class="waves-effect waves-light btn amber darken-3" onClick="functionViewDetail('+data.Appt_id+');" href="#appointment_details"><i class="material-icons">warning</i></a>';
-		}
+    if(data.action !== null){
+      button = '<a class="waves-effect waves-light btn" onClick="functionViewDetail('+data.Appt_id+');" href="#appointment_details"><i class="material-icons">zoom_in</i></a>';
+    }else{
+      button = 'Waiting for confirmation <a class="waves-effect waves-light btn amber darken-3" onClick="functionViewDetail('+data.Appt_id+');" href="#appointment_details"><i class="material-icons">warning</i></a>';
+    }
       if(data.action == null){
         res = '';
       }else if(data.action == 'Accept'){
@@ -67,7 +116,7 @@ $(document).ready(function(){
       }else{
         res = ' <span class="red-text">You declined this appointment</span>';
       }
-		var data = '<li class="row">'+
+    var data = '<li class="row">'+
                        ' <div class="col s12 m8">'+
                            ' <figure style="background-image: url('+image+')"></figure>'+
                            ' <span class="appointment_title"> '+data.first_name+' '+data.last_name+' </span>'+
@@ -85,61 +134,115 @@ $(document).ready(function(){
         $('#view_appointment .appointment_list').append(data);
         $('.modal-trigger').leanModal();
         $('.tooltipped').tooltip({delay: 10});
-	}
+    }
+
+  var decline_list = [];
+    function UI_updater_cparent(data){
+      var image;
+      if(data.profile_img === 'dp.png'){
+        image = '/images/profile/dp.png';
+      }else{
+        image = 'https://s3-ap-southeast-1.amazonaws.com/teachatco/images/'+data.profile_img;
+      }
+      var res;
+      var deleteButton = '<a href="javascript:void(0)" class="waves-effect waves-light btn red delete_trigger-btn" onClick="showDelete('+data.Appt_id+')"><i class="material-icons">delete</i></a>';
+      if(data.action == null){
+        res = '<span class="">Waiting for confirmation</span>';
+      }else if(data.action == 'Accept'){
+        deleteButton = '';
+        res = ' <span class="green-text">The Parent Accepted</span>';
+      }else if(data.action == 'Inperson'){
+        res = ' <span class="blue-text">The Parent will see you in person</span>';
+      }else{
+        decline_list[''+data.Appt_id] = data.action;
+
+        res = ' <a href="#appointment_declined-reason" class="red-text waves-effect waves-light tooltipped" onClick="onUsersDecline('+data.Appt_id+');" data-position="left" data-tooltip="Click to view the reason">The Parent Declined</a>';
+      }
+      var data = '<li class="row" '+data.Appt_id+'>'+
+                         ' <div class="col s12 m7">'+
+                             ' <figure style="background-image: url('+image+')"></figure>'+
+                             ' <span class="appointment_title"> '+data.first_name+' '+data.last_name+' </span>'+
+                             ' <small>'+data.appt_stime+' - '+data.appt_etime+'</small>'+
+                          '</div>'+
+                          '<div class="options_container" id="'+data.Appt_id+'">'+
+                            '  <div class="col s12 m5 options_btn">'+
+                                '  <div class="right">'+
+                                       //' <span class="green-text">The Parent Accepted</span>'+
+                                       //' <span class="blue-text">The Parent will see you in person</span>'+
+                                       ' '+ res + ''+
+                                     ' <a class="waves-effect waves-light btn" href="#appointment_details" onClick="functionViewDetail('+data.Appt_id+');"><i class="material-icons">zoom_in</i></a>'+
+                                     ' <a href="/parent/appointments/'+data.Appt_id+'/edit" class="waves-effect waves-light btn orange"><i class="material-icons">edit</i></a>'+
+                                     ' '+deleteButton+' '+
+                                 ' </div>'+
+                             ' </div>'+
+                             '<div class="col s12 m5 hide confirm_delete" >'+
+                                 ' <div class="right">'+
+                                     ' <h6>Delete this appointment?</h6> '+
+                                     ' <a href="#!" onClick="deleteSelectedApptById('+data.Appt_id+');" class="waves-effect waves-light btn">Yes</a>'+
+                                     ' <a href="javascript:void(0)" class="waves-effect waves-light btn red cancel_delete" onClick="cancel_delete('+data.Appt_id+');">No</a>'+
+                                 ' </div>'+
+                             ' </div>'+
+                         ' </div>'+
+                      '</li>';
+
+          $('#view_appointment .appointment_list').append(data);
+          $('.modal-trigger').leanModal();
+            $('.tooltipped').tooltip({delay: 5});
+    }
 
   var selectedAppoingmentID;
+
 	function functionViewDetail(id){
-		$('#appointment_details').openModal();
-    selectedAppoingmentID = id;
-		$.get('/appointment/v2/process/teacher/viewAppointmentDetailsById/'+id,function(data){
-			var json = $.parseJSON(data);
-      var disabled = '';
-      if(json[0]['action'] == 'Accept'){
-          var disabled_0 = 'disabled';
-      }else if(json[0]['action'] == 'Inperson'){
-        var disabled_1 = 'disabled';
-      }else{
-        disabled = ''
-      }
+      $('#appointment_details').openModal();
+      selectedAppoingmentID = id;
+      $.get('/parent/appointments/show/'+id,function(json){
 
-			var Appt = '<h5>'+json[0]['title']+'</h5>'+
-                                '<table>'+
-                                    '<tbody>'+
-                                        '<tr>'+
-                                            '<td>Meeting with</td>'+
-                                            '<td>'+json[0]['user']['0']['first_name']+' '+json[0]['user']['0']['last_name']+'</td>'+
-                                        '</tr>'+
-                                        '<tr>'+
-                                            '<td>Date</td>'+
-                                            '<td>'+dateTohuman(json[0]['appt_date'])+'</td>'+
-                                        '</tr>'+
-                                        '<tr>'+
-                                            '<td>Time</td>'+
-                                            '<td>'+json[0]['appt_stime']+' - '+json[0]['appt_etime']+'</td>'+
-                                        '</tr>'+
-                                        '<tr>'+
-                                            '<td>Attachment</td>'+
-                                            '<td id="appt_attach">No Attachment Available</td>'+
-                                        '</tr>'+
-                                    '</tbody>'+
-                                '</table>'+
-                                '<p>'+json[0]['description']+'</p>'+
-                                '<a href="#!" class="waves-effect btn '+disabled_0+'" onClick="parentAppointmentResponse(0);">Accept</a> '+
-                                '<a href="#!" class="waves-effect btn blue darken-4 '+disabled_1+'"  onClick="parentAppointmentResponse(1);">See in person</a> '+
-                                '<a href="#appointment_declined" class="waves-effect btn red modal-action modal-close" onClick="parentAppointmentResponseDeclineModal('+id+');">Decline</a>'
-                            '</div>';
+        var disabled = '';
+        if(json[0]['action'] == 'Accept'){
+            var disabled_0 = 'disabled';
+        }else if(json[0]['action'] == 'Inperson'){
+          var disabled_1 = 'disabled';
+        }else{
+          disabled = ''
+        }
+        var Appt = '<h5>'+json[0]['title']+'</h5>'+
+                                    '<table>'+
+                                        '<tbody>'+
+                                            '<tr>'+
+                                                '<td>Meeting with</td>'+
+                                                '<td>'+json[0]['first_name']+' '+json[0]['last_name']+'</td>'+
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<td>Date</td>'+
+                                                '<td>'+dateTohuman(json[0]['appt_date'])+'</td>'+
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<td>Time</td>'+
+                                                '<td>'+json[0]['appt_stime']+' - '+json[0]['appt_etime']+'</td>'+
+                                            '</tr>'+
+                                            '<tr>'+
+                                                '<td>Attachment</td>'+
+                                                '<td id="appt_attach">No Attachment Available</td>'+
+                                            '</tr>'+
+                                        '</tbody>'+
+                                    '</table>'+
+                                    '<p>'+json[0]['description']+'</p>'+
+                                '<button type="button" href="#!" class="waves-effect btn '+disabled_0+'" '+disabled_0+' onClick="parentAppointmentResponse(0,'+selectedAppoingmentID+');">Accept</button> '+
+                                '<button type="button" href="#!" class="waves-effect btn blue darken-4 '+disabled_1+'" '+disabled_1+' onClick="parentAppointmentResponse(1,'+selectedAppoingmentID+');">See in person</button> '+
+                                '<button type="button" href="#appointment_declined" class="waves-effect btn red modal-action modal-close" onClick="parentAppointmentResponseDeclineModal('+id+');">Decline</button>'
+                                '</div>';
 
-      $('#appointment_details .modal-content').html(Appt); 
-			if(typeof json[0]['file_data'] !== 'undefined'){
-				var file = json[0]['file_data'][0];
-				//alert(file['ext']);
-				$('#appt_attach').html('<a href="/universal/v2/process/downloadFileById/'+file['id']+'"><i class="material-icons">description</i> Download</a> or <a href="/parent/viewAttachment/'+id+'">View</a> Attachment');
-				//alert(file_data[0]['id']);
-			}
-		});
-	}
+              $('#appointment_details .modal-content').html(Appt); 
+        if(typeof json[0]['file_data'] !== 'undefined'){
+          var file = json[0]['file_data'][0];
+          //alert(file['ext']);
+          $('#appt_attach').html('<a href="/universal/v2/process/downloadFileById/'+file['id']+'"><i class="material-icons">description</i> Download Attachment</a>');
+          //alert(file_data[0]['id']);
+        }
+      });
+    }
 
-  function parentAppointmentResponse(res){
+  function parentAppointmentResponse(res, id){
     var resText;
     if(res == 0){
       resText = 'Accept';
@@ -149,16 +252,15 @@ $(document).ready(function(){
       resText = res;
     }
       var param = {
-        id: selectedAppoingmentID,
-        res: resText
+        id: id,
+        action: resText
       };
-      $.post('/appointment/v2/process/parent/parentResponseOnApoointment',param,function(data){
-          var json = $.parseJSON(data);
-          if(json.code == 1){
-            successToast(json.message);
+      $.post('/parent/appointments/response/'+id,param,function(data){
+          if(data.result){
+            Materialize.toast(data.message, 4000,'green',function(){window.location.reload()})
             $('#appointment_declined').closeModal();
           }else{
-            errorToast(json.message);
+            Materialize.toast(data.message, 4000,'red',function(){window.location.reload()})
           }
       });
   }
@@ -176,8 +278,36 @@ $(document).ready(function(){
     Materialize.toast(''+message+'', 5000, 'green');
   }
 
-  function dateTohuman(date){
-    //var dateObject = new Date(Date.parse(date));
-    var dateReadable =  moment(date).format("dddd, MMMM Do YYYY");//dateObject.toDateString();
-    return dateReadable;
-  }
+  function deleteSelectedApptById(id){
+      
+      $.ajax({
+              type: "DELETE",
+              url: '/teacher/appointments/delete/'+id,
+              processData:false,
+              contentType:false,
+              async: true,
+              cache:false,
+              success: function (data) {
+                if(data.result == true){
+                  call_mycalendar();
+            successToast(data.message);
+            //$('#view_appointment>ul #'+id).remove();
+            window.location.reload();
+          }else{
+            errorToast(data.message);
+          }
+              }
+          });
+    }
+
+    function onUsersDecline(id){
+      //alert(id);
+      $('#appointment_declined-reason').openModal();
+      $('#appointment_declined-reason #area_reason_text').html(decline_list[id]);
+    }
+
+    function dateTohuman(date){
+        var dateObject = new Date(Date.parse(date));
+        var dateReadable = dateObject.toDateString();
+        return dateReadable;
+      }

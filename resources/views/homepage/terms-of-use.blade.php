@@ -1,8 +1,14 @@
-@extends('layouts.master')
 
-@section('page_title', 'Terms of Use')
+@extends('theme')
+    
+@section('title_tag')
+    <title>Terms of Use</title>
+    <meta name="robots" content="noindex, nofollow">
+@stop
 
 @section('body_content')
+
+    @include('includes.nav-index')
 
     <div class="container terms">
         <h4>Terms of Use</h4>

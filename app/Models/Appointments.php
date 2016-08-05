@@ -8,7 +8,7 @@ class Appointments extends Model
 {
     protected $table = 'appointment';
 
-    protected $fillable = ['teacher_id', 'parent_id', 'appt_date', 'appt_stime', 'appt_etime', 'file_id', 'title', 'description', 'action'];
+    protected $fillable = ['teacher_id', 'parent_id', 'appt_date', 'appt_stime', 'appt_etime', 'file_id', 'title', 'description', 'action', 'created_by'];
 
     public function parent()
     {
@@ -17,6 +17,6 @@ class Appointments extends Model
 
     public function teacher()
     {
-        return $this->belongsTo('Teachat\Models\User', 'teacher', 'id');
+        return $this->belongsTo('Teachat\Models\User', 'teacher_id', 'id');
     }
 }

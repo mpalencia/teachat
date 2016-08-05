@@ -1,0 +1,1 @@
+{{ $admin->first_name }} {{ $admin->last_name }}

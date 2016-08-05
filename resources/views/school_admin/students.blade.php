@@ -49,10 +49,6 @@
                     <td><b>State</b></td>
                     <td><span id="student_state"></span></td>
                 </tr>
-                <tr>
-                    <td><b>City/Town</b></td>
-                    <td><span id="student_city"></span></td>
-                </tr>
             </tbody>
         </table>
 

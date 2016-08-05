@@ -24,6 +24,14 @@ interface CurriculumInterface
     public function getByAttributes(array $attributes, array $conditions = []);
 
     /**
+     * Get Curriculum by attributes
+     *
+     * @param array $attributes
+     * @return Curriculum
+     */
+    public function getByIdAndAttributes(array $attributes);
+
+    /**
      * Get all Curriculum by attributes
      *
      * @param array $attributes

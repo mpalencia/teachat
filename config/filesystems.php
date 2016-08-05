@@ -13,7 +13,7 @@ return [
     |
     | Supported: "local", "ftp", "s3", "rackspace"
     |
-    */
+     */
 
     'default' => 'local',
 
@@ -26,7 +26,7 @@ return [
     | reason, you may specify a default "cloud" driver here. This driver
     | will be bound as the Cloud disk implementation in the container.
     |
-    */
+     */
 
     'cloud' => 's3',
 
@@ -39,7 +39,7 @@ return [
     | may even configure multiple disks of the same driver. Defaults have
     | been setup for each driver as an example of the required options.
     |
-    */
+     */
 
     'disks' => [
 
@@ -56,10 +56,16 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => 'your-key',
-            'secret' => 'your-secret',
-            'region' => 'your-region',
-            'bucket' => 'your-bucket',
+            'key'    => 'AKIAJH3CI3N5TFELCXDA',
+            'secret' => 'vBwObKvvzatC3tVG1oQLdkjuYIt9bBiJbxhwvT/g',
+            'region' => 'ap-southeast-1',
+            'bucket' => 'teachatco',
+            'ACL'    => 'public-read',
+        ],
+
+        'uploads' => [
+            'driver' => 'local',
+            'root' => public_path() . '/',
         ],
 
     ],

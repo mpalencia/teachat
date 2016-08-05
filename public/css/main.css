@@ -134,7 +134,7 @@ footer.page-footer {
     background-image: url(../images/header-image.jpg);
     background-position: center center;
     background-repeat: no-repeat;
-    height: 400px;
+    height: 650px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
@@ -201,14 +201,35 @@ footer.page-footer {
     padding: 40px 0;
 }
 
+.index div.features {
+    padding: 30px 0;
+    text-align: center;
+}
+
+.index div.features h4 {
+    margin-top: 0;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.index div.features img {
+    width: inherit
+}
+
+.index div.features h5 {
+    font-weight: 500;
+}
+
 .index .about {
     color: #fff;
-    padding: 75px 0;
+    padding-top: 75px;
+    background-image: url(../images/about-bg.jpg);
 }
 
 .index .about img {
     width: 100%;
-    margin-bottom: 25px;
+    margin-top: 25px;
 }
 
 .index .about h5 {
@@ -244,6 +265,7 @@ footer.page-footer {
 
 .index .how-it-works img {
     width: 100%;
+    margin-top: 20px;
 }
 
 .index .how-it-works strong {
@@ -258,6 +280,14 @@ footer.page-footer {
     font-size: 14px;
     line-height: 1.75;
     font-weight: 400;
+}
+
+.index .how-it-works p {
+    margin-top: 0;
+}
+
+.index .how-it-works h6 {
+    margin-bottom: 0;
 }
 
 .index .testimonials .row {
@@ -1084,14 +1114,15 @@ div.zabuto_calendar .badge-event, div.zabuto_calendar div.legend span.badge-even
 
 .msgs .msg_body .position-right {
     float: right;
-    background-color: #42A5F5 ;
+    background-color: #E3E3E3 ;
     text-align: right;
+    color: #000;
 }
 
 .msgs .msg_body .position-right::before {
     right: -20px;
     top: 0;
-    border-left: 10px solid #42A5F5;
+    border-left: 10px solid #E3E3E3;
 }
 
 .msgs .msg_body .position-left {
@@ -1261,6 +1292,12 @@ div.zabuto_calendar .badge-event, div.zabuto_calendar div.legend span.badge-even
     object-fit: cover;
 }
 
+.video_full-screen #videoOutput {
+    width:100% !important;
+    height: 100%;
+    object-fit: cover;
+}
+
 .video_min-screen {
     height: 250px;
     width: 280px;
@@ -1273,9 +1310,16 @@ div.zabuto_calendar .badge-event, div.zabuto_calendar div.legend span.badge-even
     cursor: -webkit-grab;
     cursor: grab;
     z-index: 0;
+    /*overflow: hidden;*/
 }
 
 .video_min-screen #video_min-screen {
+    width:100% !important;
+    height: 100%;
+    object-fit: fill;
+}
+
+.video_min-screen #videoInput {
     width:100% !important;
     height: 100%;
     object-fit: fill;
@@ -1650,7 +1694,7 @@ div.zabuto_calendar .badge-event, div.zabuto_calendar div.legend span.badge-even
 }
 
 #incoming_call .modal-content {
-    padding: 0;
+    padding: 0 24px;
 }
 
 #incoming_call figure {
@@ -1668,7 +1712,7 @@ div.zabuto_calendar .badge-event, div.zabuto_calendar div.legend span.badge-even
 #incoming_call p.truncate {
     font-size: 20px;
     font-weight: 300;
-    margin-bottom: 0;
+    margin-top: 0;
 }
 
 #incoming_call p {
@@ -1677,11 +1721,13 @@ div.zabuto_calendar .badge-event, div.zabuto_calendar div.legend span.badge-even
 
 #incoming_call p.calling {
     letter-spacing: 1px;
+    margin: 0;
 }
 
 #incoming_call .btn-floating {
     height: 60px;
     width: 60px;
+    margin-bottom: 10px;
 }
 
 #incoming_call .btn-floating i {
@@ -1969,6 +2015,98 @@ div.material-table table th {
     z-index: 9999;
 }
 
-.btn-thing .btn {
-    padding: 0 1rem !important;
+.secondary-content .btn {
+    padding: 0 1rem;
+    margin-top: -7px;
+    color: #fff;
+} 
+
+.principal_list .btn {
+    padding: 2px 16px;
+    color: #fff;
+}
+
+#admin .btn {
+    padding: 2px 16px;
+    color: #fff;
+}
+
+#admin i {
+    color: #fff;
+}
+
+span.unread {
+        color: #fff;
+    background-color: red;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    display: block;
+    padding-top: 1px;
+    font-size: 12px;
+    text-align: center;
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    line-height: 18px;
+}
+
+#notification.dropdown-content {
+  background-color: #FFFFFF;
+  margin: 0;
+  display: none;
+  min-width: 300px; /* Changed this to accomodate content width */
+  max-height: auto;
+    margin-left: -1px; /* Add this to keep dropdown in line with edge of navbar */
+  overflow: hidden; /* Changed this from overflow-y:auto; to overflow:hidden; */
+  opacity: 0;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 2;
+  will-change: width, height;
+  max-height: 400px;
+  height: auto;
+    overflow-y: scroll;
+}
+
+#notification .collection-item .title {
+    padding: 0;
+}
+
+#notification .collection-item.avatar {
+    min-height: auto;
+}
+
+#notification .collection-item img {
+    margin-top: 10px;
+}
+
+#messages.dropdown-content {
+  background-color: #FFFFFF;
+  margin: 0;
+  display: none;
+  min-width: 300px; /* Changed this to accomodate content width */
+  max-height: auto;
+    margin-left: -1px; /* Add this to keep dropdown in line with edge of navbar */
+  overflow: hidden; /* Changed this from overflow-y:auto; to overflow:hidden; */
+  opacity: 0;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 2;
+  will-change: width, height;
+  max-height: 400px;
+  height: auto;
+    overflow-y: scroll;
+}
+
+#messages .collection-item .title {
+    padding: 0;
+}
+
+#messages .collection-item.avatar {
+    min-height: auto;
+}
+
+#messages .collection-item img {
+    margin-top: 10px;
 }

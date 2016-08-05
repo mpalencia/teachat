@@ -4,6 +4,7 @@ namespace Teachat\Repositories\Eloquent;
 
 use Teachat\Models\Announcements;
 use Teachat\Repositories\Interfaces\AnnouncementsInterface;
+use Carbon\Carbon;
 
 class AnnouncementsEloquent implements AnnouncementsInterface
 {
@@ -32,6 +33,7 @@ class AnnouncementsEloquent implements AnnouncementsInterface
             ->select('announcement.*', 'users.*')
             ->join('users', 'announcement.user_id', '=', 'users.id')
             ->where('announcement.id', '=', $id)
+            ->orderBy('created_at', 'desc')
             ->get()
             ->toArray();
     }
@@ -63,6 +65,16 @@ class AnnouncementsEloquent implements AnnouncementsInterface
     {
         return $this->announcements->with($relations)->find($id);
 
+    }
+
+    /**
+     * Get all announcements by attributes with conditions
+     *
+     * @return Announcements
+     */
+    public function getByAttributesWithCondition()
+    {
+        return $this->announcements;
     }
 
     /**
@@ -107,9 +119,9 @@ class AnnouncementsEloquent implements AnnouncementsInterface
     {
         $announcements = $this->announcements->with($relations)->where($attributes)->orderBy($orderBy, $sort);
 
-        if ($conditions != '') {
-            $announcements = $announcements->whereNotNull('action');
-        }
+        // if ($conditions != '') {
+        //     $announcements = $announcements->whereNotNull('action');
+        // }
 
         return $announcements->get()->toArray();
     }
@@ -122,12 +134,40 @@ class AnnouncementsEloquent implements AnnouncementsInterface
      * @return Response
      */
     public function getDashboardAnnoucements($role_id, $school_id)
-    {
+    {   
+        $new_carbon = date("Y-m-d");
+
+
+        if ($role_id == 2) {
+            $rona= $this->announcements
+                ->where('school_id', $school_id)
+                ->where('expiration_date', '>=', $new_carbon)
+                ->where('publish_on', '<=', $new_carbon)
+                ->whereIn('announce_to', [1, 2])
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->toArray();
+        }
+
+        if ($role_id == 4) {
+            return $this->announcements
+                ->where('school_id', $school_id)
+                ->where('expiration_date', '>=', $new_carbon)
+                ->where('publish_on', '<=', $new_carbon)
+                ->whereIn('announce_to', [1, 2, 3])
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->toArray();
+        }
+
         return $this->announcements
             ->where('school_id', $school_id)
+            ->where('expiration_date', '>=', $new_carbon)
+            ->where('publish_on', '<=', $new_carbon)
             ->whereIn('announce_to', [1, $role_id])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -174,5 +214,16 @@ class AnnouncementsEloquent implements AnnouncementsInterface
     public function delete($id)
     {
         return $this->announcements->find($id)->delete();
+    }
+
+    /**
+     * Get Announcements by id
+     *
+     * @param int $id
+     * @return Announcements
+     */
+    public function gets()
+    {
+        return $this->announcements;
     }
 }

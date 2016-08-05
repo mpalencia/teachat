@@ -5,9 +5,12 @@ namespace Teachat\Http\Controllers\HomePage;
 use Teachat\Events\UserWasCreated;
 use Teachat\Http\Controllers\Controller;
 use Teachat\Http\Requests\RegisterRequest;
+use Teachat\Http\Requests\New_RegisterRequest;
+use Teachat\Repositories\Interfaces\CountryInterface;
 use Teachat\Repositories\Interfaces\SchoolInterface;
 use Teachat\Repositories\Interfaces\StateUsInterface;
 use Teachat\Repositories\Interfaces\UserInterface;
+use Teachat\Services\Curl;
 use Teachat\Services\MailSender;
 
 class RegistrationController extends Controller
@@ -34,11 +37,12 @@ class RegistrationController extends Controller
      * @param StateUsInterface $stateUs
      * @return void
      */
-    public function __construct(SchoolInterface $school, StateUsInterface $stateUs, UserInterface $user)
+    public function __construct(SchoolInterface $school, StateUsInterface $stateUs, UserInterface $user, CountryInterface $country)
     {
         $this->school = $school;
         $this->stateUs = $stateUs;
         $this->user = $user;
+        $this->country = $country;
     }
 
     /**
@@ -51,9 +55,23 @@ class RegistrationController extends Controller
         $data = [
             'schools' => $this->school->getAll(),
             'state_us' => $this->stateUs->getAll(),
+            'country' => $this->country->getAll(),
         ];
 
         return view('homepage.registration', $data);
+    }
+
+    public function getStateSchoolByCountryId($country_id)
+    {
+        $stateUs = $this->stateUs->getAllByAttributes(['country_id' => $country_id], 'state_name');
+        $school = $this->school->getAllByAttributes(['country_id' => $country_id], 'school_name');
+
+        if (!empty($stateUs)) {
+            return ['result' => true, 'message' => $stateUs, 'messages' => $school];
+        }
+
+        return ['result' => false, 'message' => 'No State/Province Available.', 'messages' => 'No School Available.'];
+
     }
 
     /**
@@ -62,16 +80,21 @@ class RegistrationController extends Controller
      * @param RegisterRequest $request
      * @return view
      */
-    public function store(RegisterRequest $request, MailSender $mailSender)
+    public function store(New_RegisterRequest $request, MailSender $mailSender)
     {
+
         $verification_code = $this->_generate_verification_code();
+
+        if ($request->role_id == 3) {
+            $request->merge(['school_id' => 1]);
+        }
 
         $request->merge(['password' => bcrypt($request->password), 'verification_code' => $verification_code]);
 
         $user = $this->user->create($request->all());
 
         if (!$user) {
-            return response()->json(['success' => false, 'message' => 'Error in creating account. Pleast try again.']);
+            return json_encode(array('result' => 'error', 'message' => 'Error in creating account. Pleast try again.'));
         }
 
         if ($user->role_id == 2) {
@@ -81,11 +104,22 @@ class RegistrationController extends Controller
             \Event::fire(new UserWasCreated($request));
         }
 
+        $fields = array(
+            'user_id' => $user->id,
+            'additional_data' => ['first_name' => $user->first_name, 'last_name' => $user->last_name],
+        );
+
+        $fields = json_encode($fields);
+
+        $curl = new Curl();
+        $curl->call($fields);
+
         $request->merge(['link' => env('APP_URL') . '/registration/activate/' . $verification_code]);
 
         $mailSender->send('email.email_confirmation', 'Email Confirmation', $request->all());
 
-        return response()->json(['success' => true, 'message' => "Congratulatons! You've successfully created your account.<br> Please confirm your account in your email."]);
+        return json_encode(array('result' => 'success', 'message' => 'Registration Successful. Please check your email inbox to verify your account. <br> Also please check your SPAM folder if you don\'t see it in your inbox.'));
+
     }
 
     /**
@@ -96,7 +130,7 @@ class RegistrationController extends Controller
      */
     public function activate($verification_code)
     {
-        if ($user = $this->user->updateByAttributes(['verification_code' => $verification_code, 'status' => 0], ['status' => 1])) {
+        if ($user = $this->user->updateByAttributes(['verification_code' => $verification_code, 'status' => 0], ['status' => 1, 'active' => 1])) {
 
             return redirect('login')->with('account_activated', 'Your account is now activated.');
         }

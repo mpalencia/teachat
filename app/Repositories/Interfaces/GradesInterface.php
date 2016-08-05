@@ -21,6 +21,21 @@ interface GradesInterface
     public function getById($id);
 
     /**
+     * Get all grades.
+     *
+     * @return Grades
+     */
+    public function getAll();
+
+    /**
+     * Get Grades by attributes
+     *
+     * @param array $attributes
+     * @return Grades
+     */
+    public function getByIdAndAttributes(array $attributes);
+
+    /**
      * Get Grades by attributes
      *
      * @param array $attributes

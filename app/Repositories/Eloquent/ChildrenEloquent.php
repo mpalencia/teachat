@@ -21,6 +21,16 @@ class ChildrenEloquent implements ChildrenInterface
     }
 
     /**
+     * Get children
+     *
+     * @return Children
+     */
+    public function get()
+    {
+        return $this->children;
+    }
+
+    /**
      * Get children by id
      *
      * @param int $id
@@ -28,7 +38,7 @@ class ChildrenEloquent implements ChildrenInterface
      */
     public function getById($id)
     {
-        return $this->children->find($id);
+        return $this->children->with('grade')->find($id);
     }
 
     /**
@@ -73,6 +83,18 @@ class ChildrenEloquent implements ChildrenInterface
     }
 
     /**
+     * Get children by attributes first
+     *
+     * @param array $attributes
+     * @return User
+     */
+    public function getByAttributesFirst(array $attributes)
+    {
+        return $this->children->where($attributes)->first();
+    }
+
+
+    /**
      * Get all children by attributes
      *
      * @param array $attributes
@@ -83,6 +105,20 @@ class ChildrenEloquent implements ChildrenInterface
     public function getAllByAttributes(array $attributes, $orderBy = '', $sort = 'ASC')
     {
         return $this->children->where($attributes)->orderBy($orderBy, $sort)->get()->toArray();
+    }
+
+    /**
+     * Get all Curriculum by attributes with relationships
+     *
+     * @param array $attributes
+     * @param array $relations
+     * @param string $orderBy
+     * @param string $sort
+     * @return Curriculum
+     */
+    public function getAllByAttributesWithRelations(array $attributes, array $relations, $orderBy = '', $sort = 'ASC')
+    {
+        return $this->children->with($relations)->where($attributes)->orderBy($orderBy, $sort)->get()->toArray();
     }
 
     /**
@@ -118,5 +154,16 @@ class ChildrenEloquent implements ChildrenInterface
     public function updateByAttributes(array $attributes, array $update_fields)
     {
         return $this->children->where($attributes)->update($update_fields);
+    }
+
+    /**
+     * Delete a certain child.
+     *
+     * @param int $id
+     * @return boolean
+     */
+    public function delete($id)
+    {
+        return $this->children->find($id)->delete();
     }
 }

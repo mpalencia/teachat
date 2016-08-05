@@ -27,6 +27,8 @@ class AnnouncementsRequest extends Request
             'title' => 'required|max:50',
             'announcement' => 'required',
             'announce_to' => 'required',
+            'expiration_date' => 'required',
+            'publish_on' => 'required',
         ];
     }
 }

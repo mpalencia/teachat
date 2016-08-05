@@ -42,17 +42,17 @@ class GradesController extends Controller
      */
     public function getAll()
     {
-        $grades = $this->grades->getAllByAttributes(['user_id' => Auth::user()->id], 'description');
+        $grades = $this->grades->getAll();
 
         $g = array_map(function ($structure) use ($grades) {
 
-            $action = '<button id="btn-edit-grades" type="button" class="btn btn-primary btn-circle btn-edit-grades" title="Edit" data-toggle="modal" data-target="#edit-grades"
+            $action = '<button id="btn-edit-grades" type="button" class="btn btn-primary btn-circle btn-flat btn-edit-grades" title="Edit" data-toggle="modal" data-target="#edit-grades"
                         onclick="editGrades(this)"
                         data-grades-id="' . $structure['id'] . '"
                         data-description="' . $structure['description'] . '">
                         <i class="material-icons">edit</i>
                     </button> ';
-            $action .= ' <button id="btn-delete-grades" type="button" class="btn btn-primary red btn-circle btn-delete-grades" title="Delete" data-toggle="modal" data-target="#delete-grades"
+            $action .= ' <button id="btn-delete-grades" type="button" class="btn btn-primary red btn-circle btn-flat btn-delete-grades" title="Delete" data-toggle="modal" data-target="#delete-grades"
                         onclick="deleteGrades(this)"
                         data-grades-id="' . $structure['id'] . '"
                         data-description="' . $structure['description'] . '">

@@ -24,4 +24,9 @@ class TeacherSubjects extends Model
     {
         return $this->belongsTo('Teachat\Models\Curriculum', 'subject_id', 'id');
     }
+
+    public function teacher()
+    {
+        return $this->belongsTo('Teachat\Models\User', 'user_id', 'id');
+    }
 }

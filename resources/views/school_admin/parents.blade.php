@@ -10,25 +10,44 @@
     <div class="row">
         <div id="admin" class="col s12">
             <div class="card material-table">
-                <div class="table-header blue-grey lighten-5">Parents Profile</div>
+                <div class="table-header blue-grey lighten-5">Parents Profile
+                    <div class="actions">
+                        <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+                    </div>
+                </div>
                 <div class="ddiv_notif notif"></div>
                 <!-- <table class="table table-bordered table-hover" id="parents"></table> -->
 
-
-        <ul class="collection with-header">
-            @foreach($parents as $p)
-                <li class="collection-item">
-                    <div>
-                        <a href="#" style="color:#3174c7" onclick="viewParent({{$p->id}})">{{$p->first_name}} {{$p->middle_name}} {{$p->last_name}}</a>
-                        <a href="/school-admin/parents/{{$p->id}}" class="secondary-content">View Child <i class="material-icons">search</i></a>
-                    </div>
-                </li>
-            @endforeach
-            @if(is_null($parents))
-            	No Students to approve.
-            @endif
-        </ul>
-
+                <table class="table table-bordered table-hover" id="parents">
+                     <thead>
+                        <tr>
+                            <th style="width: 100px!important;"></th>
+                            <th>Name</th>
+                            <th class="center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($parents as $p)
+                            <tr class="principal_list">
+                                <td>
+                                    @if($p['profile_img'] != null || $p['profile_img'] != '')
+                                    <figure class="school_badge" style="background-image: url('https://s3-ap-southeast-1.amazonaws.com/teachatco/images/{{ $p['profile_img'] }}'); width: 70px; height: 70px;"></figure>
+                                    @else
+                                     <figure class="school_badge" style="background-image: url({{asset('images/dp.png')}}); width: 70px;height: 70px;"></figure>
+                                    @endif
+                                </td>
+                                <td><a href="#" style="color:#3174c7" onclick="viewParent({{$p->id}})">{{$p->first_name}} {{$p->last_name}}</a></td>
+                                <td>
+                                    <a href="/school-admin/parents/{{$p->id}}" class="btn waves-effect blue white-text">View Child <i class="material-icons">search</i></a>
+                                    
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @if(is_null($parents))
+                	No Students to approve.
+                @endif
 
             </div>
         </div>
@@ -125,5 +144,10 @@
 <script src="{{ asset('dataTable/jquery.dataTables_.min.js')}}"></script>
 <script src="{{ asset('teachatv3/school-admin/parents.js')}}"></script>
 <script src="{{ asset('teachatv3/teachatv3.js')}}"></script>
-
+<script type="text/javascript">
+    var students = $('#parents').DataTable({
+        'processing': true,
+        'order': [[ 0, "asc" ]],
+    });
+</script>
 @stop

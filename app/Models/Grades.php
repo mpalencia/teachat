@@ -8,5 +8,5 @@ class Grades extends Model
 {
     protected $table = 'grades';
 
-    protected $fillable = ['user_id', 'school_id', 'description'];
+    protected $fillable = ['description'];
 }

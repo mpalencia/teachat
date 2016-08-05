@@ -3,7 +3,7 @@ var nColNumber = -1;
 var subjects = $('#subjects').DataTable({
     'ajax': 'subjects/getAll',
     'processing': true,
-    'order': [[ 0, "asc" ]],
+    'order': [],
     'columnDefs': [
         { 'targets': [ ++nColNumber ], 'title':'Grade', 'name': 'grade', 'data': 'grade' },
         { 'targets': [ ++nColNumber ], 'title':'Subject Category', 'name': 'subject_category', 'data': 'subject_category' },
@@ -12,9 +12,11 @@ var subjects = $('#subjects').DataTable({
     ]
 });
 
+
 $('#form_add_subjects').on('submit',function(e){
     e.preventDefault();
     ajaxCall('POST', 'subjects', getFormInputs(this.id), false, 'card', 'form_add_subjects', subjects);
+    window.location.reload();
 });
 
 /*$('.form_edit_subjects').on('submit',function(e){
@@ -29,6 +31,7 @@ $('.btn-delete-yes-subjects').on('click', function() {
         success: function(data) {
             Materialize.toast(data.message, 8000)
             reloadTable(subjects);
+            window.location.reload();
         }
     });
 });

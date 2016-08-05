@@ -33,6 +33,13 @@ interface AnnouncementsInterface
     public function getByIdWithRelations($id, array $relations);
 
     /**
+     * Get all announcements by attributes with conditions
+     *
+     * @return Announcements
+     */
+    public function getByAttributesWithCondition();
+
+    /**
      * Get Announcements by attributes
      *
      * @param array $attributes

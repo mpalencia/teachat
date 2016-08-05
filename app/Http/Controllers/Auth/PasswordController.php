@@ -5,6 +5,7 @@ namespace Teachat\Http\Controllers\Auth;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Teachat\Http\Controllers\Controller;
 use Teachat\Http\Requests\ForgotPasswordRequest;
+use Teachat\Http\Requests\ChangePasswordRequest;
 use Teachat\Repositories\Interfaces\UserInterface;
 use Teachat\Services\MailSender;
 
@@ -56,7 +57,7 @@ class PasswordController extends Controller
 
         $user_data['temp_password'] = $this->_generate_temporary_password();
 
-        $this->user->update($user_data['id'], ['password' => bcrypt($user_data['temp_password'])]);
+        $this->user->update($user_data['id'], ['password' => bcrypt($user_data['temp_password']), 'password_reset' => 1]);
 
         if ($mailSender->send('email.reset_password', 'Reset Password Request', $user_data)) {
             return response()->json(['success' => true, 'message' => 'Success! New password has been sent to your email.']);
@@ -78,4 +79,27 @@ class PasswordController extends Controller
         // shuffle the result
         return str_shuffle($pin);
     }
+
+    /**
+     * Change Password
+     *
+     * @return view
+     */
+    public function changePassword(ChangePasswordRequest $request)
+    {   
+        dd(Auth::user()->id);
+        $id = Auth::user()->id;
+        if(Auth::validate(['password' => $request->current_pass])){
+            $newPassword = bcrypt($request->password);
+            if ($this->user->update($id, ['password' => $newPassword, 'password_reset' => 0])) {
+                return response()->json(['success' => true, 'message' => 'Password changed successfully.']);
+            }
+        }
+
+        else{
+            return response()->json(['result' => false, 'message' => 'Current password does not match.']);
+        }
+
+    }
+
 }

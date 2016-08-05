@@ -17,6 +17,7 @@ class RedirectIfTeacher
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        //dd(Auth::guard($guard)->user()->role_id);))
         if (Auth::guard($guard)->user()->role_id != 2) {
             return abort(401);
         }

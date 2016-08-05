@@ -24,6 +24,7 @@ $('.btn-delete-yes-subject-category').on('click', function() {
 $('#form_add_subject_category').on('submit',function(e){
     e.preventDefault();
     ajaxCall('POST', 'subject-category/store', getFormInputs(this.id), false, 'card', 'form_add_subject_category', subject_categories);
+    $('#form_add_subject_category')[0].reset();
 });
 
 $('.form_edit_subject_category').on('submit',function(e){

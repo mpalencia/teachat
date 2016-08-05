@@ -32,6 +32,31 @@ class GradesEloquent implements GradesInterface
     }
 
     /**
+     * Get all grades.
+     *
+     * @return Grades
+     */
+    public function getAll()
+    {
+        return $this->grades->get()->toArray();
+    }
+
+    /**
+     * Get Grades by attributes
+     *
+     * @param array $attributes
+     * @return Grades
+     */
+    public function getByIdAndAttributes(array $attributes)
+    {
+        if ($grades = $this->grades->where($attributes)->first()) {
+            return $grades;
+        }
+
+        return false;
+    }
+
+    /**
      * Get Grades by attributes
      *
      * @param array $attributes

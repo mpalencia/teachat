@@ -1,19 +1,19 @@
 var duration, display, interval, diff;
 
 function showTimer(){
-	display = document.getElementById('videoTimer_js');
+	display = document.getElementById('clock');
 	display.textContent = '00:00'; 
 }
 
 function startTimer() {
-	duration = 900;
+	duration = 0;
     var start = Date.now(),
         minutes,
         seconds;
     function timer() {
         // get the number of seconds that have elapsed since 
         // startTimer() was called
-        diff = duration - (((Date.now() - start) / 1000) | 0);
+        diff = duration + (((Date.now() - start) / 1000) | 0);
 
         // does the same job as parseInt truncates the float
         minutes = (diff / 60) | 0;
@@ -24,13 +24,13 @@ function startTimer() {
 
         display.textContent = minutes + ":" + seconds; 
 
-        if (diff == 5) {
+        /*if (diff == 5) {
             // add one second so that the count down starts at the full duration
             // example 05:00 not 04:59
 			//ALERT MODAL HERE ----
         } else if(diff == 0){
 			stopTimer();
-		}
+		}*/
     };
     // we don't want to wait a full second before the timer starts
     timer();
@@ -39,7 +39,7 @@ function startTimer() {
 
 function stopTimer(){
 	clearInterval(interval);
-    btn_end_call(data.user_id);
+    //btn_end_call(data.user_id);
 }
 
 function resetTimer(){

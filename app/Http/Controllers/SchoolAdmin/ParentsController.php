@@ -35,7 +35,7 @@ class ParentsController extends Controller
      */
     public function index()
     {
-        $data['parents'] = User::select('users.*', 'children.parent_id')->join('children', 'users.id', '=', 'children.parent_id')->where('children.approved', 0)->groupBy('children.parent_id')->get();
+        $data['parents'] = User::select('users.*', 'children.parent_id')->join('children', 'users.id', '=', 'children.parent_id')->where('children.approved', 0)->where('children.school_id', Auth::user()->school_id)->groupBy('children.parent_id')->get();
 
         return view('school_admin.parents', $data);
     }
@@ -66,13 +66,13 @@ class ParentsController extends Controller
 
             $parent_name = '<a href="#" style="color:#3174c7" onclick="viewParent(' . $structure['id'] . ')">' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '</a>';
 
-            $action = '<button id="btn-edit-parents" type="button" class="btn btn-primary btn-circle btn-edit-parents" title="Approve" data-toggle="modal" data-target="#edit-parents"
+            $action = '<button id="btn-edit-parents" type="button" class="btn btn-primary btn-circle btn-flat btn-edit-parents" title="Approve" data-toggle="modal" data-target="#edit-parents"
                         onclick="approveParent(this)"
                         data-parents-id="' . $structure['id'] . '"
                         data-parents-name="' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '">
                         <i class="material-icons">check</i>
                     </button> ';
-            $action .= '<button id="btn-delete-parents" type="button" class="btn btn-primary red btn-circle btn-delete-parents" title="Deny" data-toggle="modal" data-target="#delete-parents"
+            $action .= '<button id="btn-delete-parents" type="button" class="btn btn-primary red btn-circle btn-flat btn-delete-parents" title="Deny" data-toggle="modal" data-target="#delete-parents"
                         onclick="denyParent(this)"
                         data-parents-id="' . $structure['id'] . '"
                         data-parents-name="' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '">
@@ -95,23 +95,23 @@ class ParentsController extends Controller
      */
     public function getAllChildren($parent_id)
     {
-        $children = $this->children->getAllByAttributes(['parent_id' => $parent_id, 'approved' => 0], 'last_name');
+        $children = $this->children->getAllByAttributes(['parent_id' => $parent_id, 'school_id' => Auth::user()->school_id, 'approved' => 0], 'last_name');
 
         $s = array_map(function ($structure) use ($children) {
 
             $student_name = '<a href="#" style="color:#3174c7" onclick="viewStudent(' . $structure['id'] . ')">' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '</a>';
 
-            $action = '<button id="btn-edit-students" type="button" class="btn btn-primary btn-circle btn-edit-students" title="Approve" data-toggle="modal" data-target="#edit-students"
+            $action = '<button id="btn-edit-students" type="button" class="btn btn-primary btn-circle btn-flat btn-edit-students" title="Approve" data-toggle="modal" data-target="#edit-students"
                         onclick="approveStudent(this)"
                         data-students-id="' . $structure['id'] . '"
                         data-students-name="' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '">
                         <i class="material-icons">check</i>
                     </button> ';
-            $action .= '<button id="btn-delete-students" type="button" class="btn btn-primary red btn-circle btn-delete-students" title="Deny" data-toggle="modal" data-target="#delete-students"
+            $action .= '<button id="btn-delete-students" type="button" class="btn btn-primary red btn-circle btn-flat btn-delete-students" title="Deny" data-toggle="modal" data-target="#delete-students"
                         onclick="denyStudent(this)"
                         data-students-id="' . $structure['id'] . '"
                         data-students-name="' . $structure['first_name'] . ' ' . $structure['middle_name'] . ' ' . $structure['last_name'] . '">
-                        <i class="material-icons">delete</i>
+                        <i class="material-icons">close</i>
                     </button>';
 
             return [

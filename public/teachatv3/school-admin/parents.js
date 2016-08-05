@@ -56,8 +56,8 @@ function viewParent(id) {
         $('#parent_name').html(result.data.first_name + ' ' + result.data.middle_name + ' ' + result.data.last_name);
         $('#parent_email').html(result.data.email);
         $('#parent_gender').html(result.data.gender);
-        $('#parent_address_one').html(result.data.email);
-        $('#parent_address_two').html(result.data.gender);
+        $('#parent_address_one').html(result.data.address_one);
+        $('#parent_address_two').html(result.data.address_two);
         $('#parent_state').html(result.data.state.state_name);
         $('#parent_city').html(result.data.city);
         $('#parent_zip_code').html(result.data.zip_code);

@@ -66,15 +66,13 @@ $(document).ready(function(){
 			    	$('#view_appointment .date_selected').html(dateTohuman(date));
 			    	$('#view_appointment').openModal();
 			      	getAppointmentBySelectedDate(date);
-			  	}else{
-			  		//---render no file here
 			  	}
 		}
 
 		function getAppointmentBySelectedDate(data){
 			var param = {};
 			$('#view_appointment .appointment_list').html(' ');
-	    	var url = '/appointment/v2/process/getAppointmentBySelectedDate/'+data;
+	    	var url = '/teacher/appointments/getAllBySelectedDate/'+data;
 	    	$.ajax({
 	            type: "GET",
 	            url: url,
@@ -88,23 +86,32 @@ $(document).ready(function(){
 	                var files = json.length;
 
                     for(i = 0; i < files; i++){
-                       UI_updater(json[i]);
+                       UI_updater_cteacher(json[i]);
                     }
 	    			
 	            }
 	        });
 		}
 
+		var selectedAppoingmentID;
+
 		function functionViewDetail(id){
 			$('#appointment_details').openModal();
-			$.get('/appointment/v2/process/teacher/viewAppointmentDetailsById/'+id,function(data){
-				var json = $.parseJSON(data);
+			$.get('/teacher/appointments/show/'+id,function(json){
+				var disabled = '';
+		        if(json[0]['action'] == 'Accept'){
+		            var disabled_0 = 'disabled';
+		        }else if(json[0]['action'] == 'Inperson'){
+		          var disabled_1 = 'disabled';
+		        }else{
+		          disabled = ''
+		        }
 				var Appt = '<h5>'+json[0]['title']+'</h5>'+
                                     '<table>'+
                                         '<tbody>'+
                                             '<tr>'+
                                                 '<td>Meeting with</td>'+
-                                                '<td>'+json[0]['user']['0']['first_name']+' '+json[0]['user']['0']['last_name']+'</td>'+
+                                                '<td>'+json[0]['first_name']+' '+json[0]['last_name']+'</td>'+
                                             '</tr>'+
                                             '<tr>'+
                                                 '<td>Date</td>'+
@@ -121,6 +128,10 @@ $(document).ready(function(){
                                         '</tbody>'+
                                     '</table>'+
                                     '<p>'+json[0]['description']+'</p>'+
+
+                                    '<button type="button" href="#!" class="waves-effect btn '+disabled_0+'" '+disabled_0+' onClick="parentAppointmentResponse(0,'+selectedAppoingmentID+');">Accept</button> '+
+	                                '<button type="button" href="#!" class="waves-effect btn blue darken-4 '+disabled_1+'" '+disabled_1+' onClick="parentAppointmentResponse(1,'+selectedAppoingmentID+');">See in person</button> '+
+	                                '<button type="button" href="#appointment_declined" class="waves-effect btn red modal-action modal-close" onClick="parentAppointmentResponseDeclineModal('+id+');">Decline</button>'
                                 '</div>';
 
              	$('#appointment_details .modal-content').html(Appt); 
@@ -133,6 +144,29 @@ $(document).ready(function(){
 			});
 		}
 
+		function parentAppointmentResponse(res, id){
+		    var resText;
+		    if(res == 0){
+		      resText = 'Accept';
+		    }else if(res == 1){
+		      resText = 'Inperson';
+		    }else{
+		      resText = res;
+		    }
+		      var param = {
+		        id: id,
+		        action: resText
+		      };
+		      $.post('/parent/appointments/response/'+id,param,function(data){
+		          if(data.result){
+		            Materialize.toast(data.message, 4000,'green',function(){window.location.reload()})
+		            $('#appointment_declined').closeModal();
+		          }else{
+		            Materialize.toast(data.message, 4000,'red',function(){window.location.reload()})
+		          }
+		      });
+		  }
+  
 		function errorToast(message){
 			Materialize.toast(''+message+'', 5000, 'red');
 		}
@@ -142,7 +176,7 @@ $(document).ready(function(){
 		}
 
 		var decline_list = [];
-		function UI_updater(data){
+		function UI_updater_cparent(data){
 			var image;
 			if(data.profile_img === 'dp.png'){
 				image = '/images/profile/dp.png';
@@ -160,13 +194,13 @@ $(document).ready(function(){
 				res = ' <span class="blue-text">The Parent will see you in person</span>';
 			}else{
 				decline_list[''+data.Appt_id] = data.action;
-				console.log(decline_list);
+
 				res = ' <a href="#appointment_declined-reason" class="red-text waves-effect waves-light tooltipped" onClick="onUsersDecline('+data.Appt_id+');" data-position="left" data-tooltip="Click to view the reason">The Parent Declined</a>';
 			}
 			var data = '<li class="row" '+data.Appt_id+'>'+
 	                       ' <div class="col s12 m7">'+
 	                           ' <figure style="background-image: url('+image+')"></figure>'+
-	                           ' <span class="appointment_title"> '+data.name_prefix+''+data.first_name+' '+data.last_name+' </span>'+
+	                           ' <span class="appointment_title"> '+data.first_name+' '+data.last_name+' </span>'+
 	                           ' <small>'+data.appt_stime+' - '+data.appt_etime+'</small>'+
 	                        '</div>'+
 	                        '<div class="options_container" id="'+data.Appt_id+'">'+
@@ -176,7 +210,7 @@ $(document).ready(function(){
                                        //' <span class="blue-text">The Parent will see you in person</span>'+
                                        ' '+ res + ''+
 	                                   ' <a class="waves-effect waves-light btn" href="#appointment_details" onClick="functionViewDetail('+data.Appt_id+');"><i class="material-icons">zoom_in</i></a>'+
-	                                   ' <a href="/teacher/appointments/edit/'+data.Appt_id+'" class="waves-effect waves-light btn orange"><i class="material-icons">edit</i></a>'+
+	                                   ' <a href="/teacher/appointments/'+data.Appt_id+'/edit" class="waves-effect waves-light btn orange"><i class="material-icons">edit</i></a>'+
 	                                   ' '+deleteButton+' '+
 	                               ' </div>'+
 	                           ' </div>'+
@@ -195,18 +229,70 @@ $(document).ready(function(){
             $('.tooltipped').tooltip({delay: 5});
 		}
 
+	function UI_updater_cteacher(data){
+    
+      var image;
+      if(data.profile_img === 'dp.png'){
+        image = '/images/profile/dp.png';
+      }else{
+        image = 'https://s3-ap-southeast-1.amazonaws.com/teachatco/images/'+data.profile_img;
+      }
+      var button;
+    var res;
+    if(data.action !== null){
+      button = '<a class="waves-effect waves-light btn" onClick="functionViewDetail('+data.Appt_id+');" href="#appointment_details"><i class="material-icons">zoom_in</i></a>';
+    }else{
+      button = 'Waiting for confirmation <a class="waves-effect waves-light btn amber darken-3" onClick="functionViewDetail('+data.Appt_id+');" href="#appointment_details"><i class="material-icons">warning</i></a>';
+    }
+      if(data.action == null){
+        res = '';
+      }else if(data.action == 'Accept'){
+        res = ' <span class="green-text">You accepted this appointment</span>';
+      }else if(data.action == 'Inperson'){
+        res = ' <span class="blue-text">You will see the teacher in person</span>';
+      }else{
+        res = ' <span class="red-text">You declined this appointment</span>';
+      }
+    var data = '<li class="row">'+
+                       ' <div class="col s12 m8">'+
+                           ' <figure style="background-image: url('+image+')"></figure>'+
+                           ' <span class="appointment_title"> '+data.first_name+' '+data.last_name+' </span>'+
+                           ' <small>'+data.appt_stime+' - '+data.appt_etime+'</small>'+
+                        '</div>'+
+                        '<div class="options_container">'+
+                          '  <div class="col s12 m4 options_btn">'+
+                              '  <div class="right">'+
+                                   ' '+res+' '+button+' '+
+                               ' </div>'+
+                           ' </div>'+
+                       ' </div>'+
+                    '</li>';
+
+        $('#view_appointment .appointment_list').append(data);
+        $('.modal-trigger').leanModal();
+        $('.tooltipped').tooltip({delay: 10});
+    }
+
 		function deleteSelectedApptById(id){
-			$.get('/appointment/v2/process/teacher/deleteAppointmentById/'+id,function(data){
-				var json = $.parseJSON(data);
-            	if(json.code == 1){
-            		call_mycalendar();
-					successToast(json.message);
-					//$('#view_appointment>ul #'+id).remove();
-					window.location.reload();
-				}else{
-					errorToast(json.message);
-				}
-			});
+			
+			$.ajax({
+	            type: "DELETE",
+	            url: '/teacher/appointments/delete/'+id,
+	            processData:false,
+	            contentType:false,
+	            async: true,
+	            cache:false,
+	            success: function (data) {
+	            	if(data.result == true){
+	            		call_mycalendar();
+						successToast(data.message);
+						//$('#view_appointment>ul #'+id).remove();
+						window.location.reload();
+					}else{
+						errorToast(data.message);
+					}
+	            }
+	        });
 		}
 
 		function onUsersDecline(id){

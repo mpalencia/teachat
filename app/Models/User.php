@@ -11,8 +11,10 @@ class User extends Model
     protected $fillable = [
         'email',
         'password',
-        'school_id',
         'role_id',
+        'school_id',
+        'country_id',
+        'title',
         'first_name',
         'middle_name',
         'last_name',
@@ -32,15 +34,27 @@ class User extends Model
         'address_one',
         'address_two',
         'approved',
+        'password_reset',
+        'email_notification',
     ];
 
     public function state()
     {
-        return $this->hasOne('Teachat\Models\StateUS', 'id', 'state_id');
+        return $this->hasOne('Teachat\Models\StateUs', 'id', 'state_id');
     }
 
     public function children()
     {
         return $this->hasMany('Teachat\Models\Children', 'id', 'parent_id');
+    }
+
+    public function school()
+    {
+        return $this->hasOne('Teachat\Models\School', 'id', 'school_id');
+    }
+
+    public function country()
+    {
+        return $this->hasOne('Teachat\Models\Country', 'id', 'country_id');
     }
 }

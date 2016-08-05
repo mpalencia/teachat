@@ -17,7 +17,8 @@ class RedirectIfSchoolAdmin
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (Auth::guard($guard)->user()->role_id != 5) {
+        //dd('SA'.Auth::guard($guard)->user()->role_id);
+        if (Auth::guard($guard)->user()->role_id != 4) {
             return abort(401);
         }
 

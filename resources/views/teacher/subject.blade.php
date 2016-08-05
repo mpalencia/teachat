@@ -10,13 +10,10 @@
         <div class="row">
             <div id="admin" class="col s12">
                 <div class="card material-table" >
-                    <div class="table-header blue-grey lighten-5">
-                        Add Subject
-                    </div>
+                    <div class="table-header blue-grey lighten-5">Add Subject</div>
                     <div class="div_notif notif"></div>
-
                     <form id="form_add_subjects" accept-charset="utf-8" class="row" style="padding: 10px">
-                       <div class="input-field col s12 m12">
+                       <div class="input-field col s12 m9">
                             <select required="" aria-required="true" name="subject_id" id="subject_id">
                                 <option value="0" disabled selected>-- Choose a Subject --</option>
                                 @foreach($subjects as $s)
@@ -80,5 +77,11 @@
     <script src="{{ asset('dataTable/jquery.dataTables.min.js')}}"></script>
     <script src="{{ asset('dataTable/jquery.dataTables_.min.js')}}"></script>
     <script src="{{ asset('teachatv3/teachers/subjects.js')}}"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('select').material_select();
+        $("select[required]").css({display: "inline", height: 0, padding: 0, width: 0});
+    });
+</script>
 
 @stop

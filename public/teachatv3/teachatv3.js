@@ -1,7 +1,3 @@
-
-$('select').material_select();
-
-
 $('.modal-trigger').leanModal({
     dismissible: false, // Modal can be dismissed by clicking outside of the modal
     opacity: .5, // Opacity of modal background
@@ -53,7 +49,7 @@ function clearForm(form_id)
 
 function reloadSelectField()
 {
-    $('select').material_select();
+    $('.select').material_select();
 }
 
 function getFormInputs(form_id)
@@ -88,7 +84,7 @@ function showErrorNotification(errors)
     $('.div_notif').html(alert);
 }
 
-function ajaxCall(type, url, data, redirect = false, modal = 'card', form = '', table = '')
+function ajaxCall(type, url, data, redirect = false, modal = 'card', form = '', table = '', changePassword = null, rurl = '1')
 {
     
     disableButton();
@@ -102,8 +98,35 @@ function ajaxCall(type, url, data, redirect = false, modal = 'card', form = '', 
         success: function(result) {
             
             if(! result.success) {
-                showNotification();
-                showErrorNotification(result);
+                //showNotification();
+                //showErrorNotification(result);
+                Materialize.toast(result.message, 10000, "red");
+                return false;
+            }
+
+            else {
+                if(changePassword == 'one'){
+                    Materialize.toast(result.message, 1000, "green", function(){ window.location.reload(); });
+                } else if(changePassword == 'manage-parents'){
+                    Materialize.toast(result.message, 1000, "green", function(){ window.location.href = '/school-admin/manage-parents'; });
+                } else if(changePassword == 'manage-teachers'){
+                    Materialize.toast(result.message, 1000, "green", function(){ window.location.href = '/school-admin/manage-teachers'; });
+                } else if(changePassword == 'admin-teachers'){
+                    Materialize.toast(result.message, 1000, "green", function(){ window.location.href = '/admin/teachers'; });
+                } else if(changePassword == 'admin-parents'){
+                    Materialize.toast(result.message, 1000, "green", function(){ window.location.href = '/admin/parents'; });
+                } else if(changePassword == 'admin-schools'){
+                    Materialize.toast(result.message, 1000, "green", function(){ window.location.href = '/admin/schools'; });
+                } else if(changePassword == 'admin-schooladmin'){
+                    Materialize.toast(result.message, 1000, "green", function(){ window.location.href = '/admin/school-admin'; });
+                } else if(changePassword == 'parent-appointment'){
+                    Materialize.toast(result.message, 1000, "green", function(){ window.location.href = '/parent/appointments'; });
+                } else if(changePassword == 'login'){
+                        window.location.href = result.message;
+                }else {
+                    Materialize.toast(result.message, 3000, "green");
+                }
+                
                 return false;
             }
 
@@ -116,14 +139,17 @@ function ajaxCall(type, url, data, redirect = false, modal = 'card', form = '', 
             if(redirect) {
                 window.location.href = result.message;
             }
-
-            else {
-                Materialize.toast(result.message, 12000)
-            }
-
             if(form != '') {
                 clearForm(form);
             }
+            if(rurl == '2') {
+                Materialize.toast(result.message, 2000, "green");
+                window.location.href = result.url;
+            }
+
+            
+
+            
         },
         error: function(result){
 
